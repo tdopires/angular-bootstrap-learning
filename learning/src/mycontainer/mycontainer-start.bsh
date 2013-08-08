@@ -1,0 +1,19 @@
+import com.googlecode.mycontainer.kernel.boot.*;
+import com.googlecode.mycontainer.web.*;
+import com.googlecode.mycontainer.web.jetty.*;
+
+System.setProperty("java.naming.factory.initial", "com.googlecode.mycontainer.kernel.naming.MyContainerContextFactory");
+
+builder = new ContainerBuilder();
+builder.deployVMShutdownHook();
+
+JettyServerDeployer server = builder.createDeployer(JettyServerDeployer.class);
+server.setName("WebServer");
+server.bindPort(8080);
+
+web = server.createContextWebServer();
+web.setContext("/");
+web.setResources("src/main/webapp");
+
+server.deploy();
+builder.waitFor();
